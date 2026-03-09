@@ -1,1 +1,539 @@
+/**
+ * ============================================================
+ *  POPFEED — Automated Social Media Management Website
+ * ============================================================
+ *
+ *  NO EXTERNAL ICON LIBRARIES — all icons are simple inline SVGs.
+ *
+ *  HOW THIS FILE IS ORGANIZED:
+ *  1. Imports & Brand Config
+ *  2. Icon Components (simple SVGs — easy to swap)
+ *  3. Data (services, pricing, FAQ, etc.) — easy to edit!
+ *  4. Small reusable components (Button, SectionHeading, etc.)
+ *  5. Page sections (Hero, Features, Pricing, FAQ, Footer)
+ *  6. Main App component that puts it all together
+ *
+ *  TO CUSTOMIZE:
+ *  - Change colors → edit the BRAND object below
+ *  - Change text → edit the data arrays in Section 3
+ *  - Add/remove sections → edit the <App /> at the bottom
+ * ============================================================
+ */
 
+// ─── 1. IMPORTS & BRAND CONFIG ──────────────────────────────
+import { useState, useEffect } from "react";
+
+/**
+ * BRAND COLORS — edit these to retheme the entire site!
+ */
+const BRAND = {
+  primary: "#6C3CE1",
+  primaryLight: "#A78BFA",
+  primaryDark: "#4C1D95",
+  accent: "#F97316",
+  accentLight: "#FDBA74",
+  bgDark: "#0B0B0F",
+  bgCard: "#141419",
+  bgCardHover: "#1C1C24",
+  textPrimary: "#F5F5F7",
+  textSecondary: "#9CA3AF",
+  textMuted: "#6B7280",
+  border: "#2A2A35",
+  borderLight: "#3F3F50",
+};
+
+
+// ─── 2. ICON COMPONENTS ─────────────────────────────────────
+// Each is a tiny inline SVG. "size" and "color" props control appearance.
+
+function IconZap({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  );
+}
+
+function IconCalendar({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+
+function IconSparkles({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+      <path d="M18 14l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z" />
+    </svg>
+  );
+}
+
+function IconBarChart({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
+    </svg>
+  );
+}
+
+function IconMessageSquare({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    </svg>
+  );
+}
+
+function IconTrendingUp({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+    </svg>
+  );
+}
+
+function IconUsers({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  );
+}
+
+function IconCheck({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+}
+
+function IconChevronDown({ size = 24, color = "currentColor", style = {} }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+function IconChevronRight({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+function IconArrowRight({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+    </svg>
+  );
+}
+
+function IconMenu({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
+function IconX({ size = 24, color = "currentColor" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+
+// ─── 3. EDITABLE DATA ───────────────────────────────────────
+
+const SERVICES = [
+  { icon: IconCalendar, title: "Smart Scheduling", description: "AI picks the best times to post based on when your audience is most active. Set it and forget it." },
+  { icon: IconSparkles, title: "AI Content Creation", description: "Generate captions, hashtags, and post ideas tailored to your brand voice. Never stare at a blank screen again." },
+  { icon: IconBarChart, title: "Analytics Dashboard", description: "See what's working at a glance. Track growth, engagement, and reach across every platform in one place." },
+  { icon: IconMessageSquare, title: "Unified Inbox", description: "Reply to comments and DMs from Instagram, TikTok, Facebook, and more — all from a single dashboard." },
+  { icon: IconTrendingUp, title: "Growth Automation", description: "Automated follow-up sequences, engagement pods, and trend-jacking tools to accelerate your reach." },
+  { icon: IconUsers, title: "Multi-Account Manager", description: "Manage unlimited social accounts for yourself or your clients. Perfect for agencies and creators." },
+];
+
+const PRICING = [
+  {
+    name: "Starter", price: 29, period: "month", popular: false,
+    description: "Perfect for solo creators getting started",
+    features: ["3 social accounts", "100 scheduled posts / month", "Basic analytics", "AI caption generator", "Email support"],
+  },
+  {
+    name: "Growth", price: 79, period: "month", popular: true,
+    description: "For creators and small businesses scaling up",
+    features: ["10 social accounts", "Unlimited scheduled posts", "Advanced analytics & reports", "AI content creation suite", "Unified inbox", "Priority support"],
+  },
+  {
+    name: "Agency", price: 199, period: "month", popular: false,
+    description: "For agencies managing multiple clients",
+    features: ["Unlimited social accounts", "Unlimited everything", "White-label reports", "Client collaboration tools", "API access", "Dedicated account manager"],
+  },
+];
+
+const FAQ_ITEMS = [
+  { question: "How does PopFeed's AI content creation work?", answer: "PopFeed analyzes your brand voice, past content performance, and current trends to generate post ideas, captions, and hashtag sets. You review and approve everything before it goes live — the AI handles the heavy lifting, you keep creative control." },
+  { question: "Which social media platforms are supported?", answer: "We currently support Instagram, TikTok, Facebook, X (Twitter), LinkedIn, Pinterest, and YouTube. We're always adding new platforms based on user demand." },
+  { question: "Can I cancel my subscription at any time?", answer: "Absolutely. No contracts, no hidden fees. Cancel anytime from your dashboard and you'll keep access through the end of your billing period." },
+  { question: "Is there a free trial?", answer: "Yes! Every plan comes with a 14-day free trial. No credit card required to start. You'll get full access to all features in your chosen tier." },
+  { question: "How is PopFeed different from Buffer or Hootsuite?", answer: "PopFeed is built AI-first. Instead of just scheduling posts, we help you create better content, find optimal posting times automatically, and grow your audience with smart automation. Think of us as your social media team in a box." },
+];
+
+const STATS = [
+  { value: "10K+", label: "Active Users" },
+  { value: "50M+", label: "Posts Scheduled" },
+  { value: "3.2x", label: "Avg. Growth Rate" },
+  { value: "98%", label: "Customer Satisfaction" },
+];
+
+const NAV_LINKS = [
+  { label: "Features", href: "#features" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "FAQ", href: "#faq" },
+];
+
+
+// ─── 4. SMALL REUSABLE COMPONENTS ──────────────────────────
+
+function GradientText({ children }) {
+  return (
+    <span style={{ background: `linear-gradient(135deg, ${BRAND.primaryLight}, ${BRAND.accent})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+      {children}
+    </span>
+  );
+}
+
+function PrimaryButton({ children, large = false, onClick }) {
+  const sizeClasses = large ? "px-8 py-4 text-lg" : "px-6 py-3 text-sm";
+  return (
+    <button
+      onClick={onClick}
+      className={`${sizeClasses} rounded-full font-semibold tracking-wide transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer border-none`}
+      style={{ background: `linear-gradient(135deg, ${BRAND.primary}, ${BRAND.accent})`, color: BRAND.textPrimary, boxShadow: `0 4px 24px ${BRAND.primary}40` }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function SectionHeading({ subtitle, title, description }) {
+  return (
+    <div className="text-center max-w-2xl mx-auto mb-16">
+      <p className="text-sm font-semibold tracking-widest uppercase mb-4" style={{ color: BRAND.accent }}>{subtitle}</p>
+      <h2 className="text-4xl font-bold mb-4" style={{ color: BRAND.textPrimary }}>{title}</h2>
+      {description && <p className="text-lg" style={{ color: BRAND.textSecondary }}>{description}</p>}
+    </div>
+  );
+}
+
+
+// ─── 5. PAGE SECTIONS ───────────────────────────────────────
+
+function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style={{ background: scrolled ? `${BRAND.bgDark}EE` : "transparent", backdropFilter: scrolled ? "blur(20px)" : "none", borderBottom: scrolled ? `1px solid ${BRAND.border}` : "none" }}>
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="#" className="flex items-center gap-2 no-underline">
+          <IconZap size={24} color={BRAND.accent} />
+          <span className="text-xl font-bold tracking-tight" style={{ color: BRAND.textPrimary }}>Pop<GradientText>Feed</GradientText></span>
+        </a>
+
+        <div className="hidden md:flex items-center gap-8">
+          {NAV_LINKS.map((link) => (
+            <a key={link.label} href={link.href} className="text-sm font-medium no-underline transition-colors duration-200 hover:opacity-80" style={{ color: BRAND.textSecondary }}>{link.label}</a>
+          ))}
+          <PrimaryButton>Get Started Free</PrimaryButton>
+        </div>
+
+        <button className="md:hidden cursor-pointer bg-transparent border-none p-0" onClick={() => setMobileOpen(!mobileOpen)}>
+          {mobileOpen ? <IconX size={24} color={BRAND.textPrimary} /> : <IconMenu size={24} color={BRAND.textPrimary} />}
+        </button>
+      </div>
+
+      {mobileOpen && (
+        <div className="md:hidden px-6 pb-6 flex flex-col gap-4" style={{ background: `${BRAND.bgDark}F5` }}>
+          {NAV_LINKS.map((link) => (
+            <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-base py-2 no-underline" style={{ color: BRAND.textSecondary }}>{link.label}</a>
+          ))}
+          <PrimaryButton>Get Started Free</PrimaryButton>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: BRAND.bgDark }}>
+      {/* Decorative glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-3xl pointer-events-none" style={{ width: 800, height: 800, background: `radial-gradient(circle, ${BRAND.primary}60, transparent 70%)` }} />
+      <div className="absolute bottom-0 right-0 rounded-full opacity-10 blur-3xl pointer-events-none" style={{ width: 400, height: 400, background: `radial-gradient(circle, ${BRAND.accent}50, transparent 70%)` }} />
+
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8" style={{ background: `${BRAND.primary}20`, border: `1px solid ${BRAND.primary}40`, color: BRAND.primaryLight }}>
+          <IconSparkles size={14} color={BRAND.primaryLight} />
+          AI-Powered Social Media Management
+        </div>
+
+        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight" style={{ color: BRAND.textPrimary }}>
+          Your Social Media<br />on <GradientText>Autopilot</GradientText>
+        </h1>
+
+        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed" style={{ color: BRAND.textSecondary }}>
+          PopFeed uses AI to create, schedule, and optimize your social media content — so you can focus on running your business while your audience keeps growing.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <PrimaryButton large>
+            <span className="flex items-center gap-2">Start Free Trial <IconArrowRight size={18} color={BRAND.textPrimary} /></span>
+          </PrimaryButton>
+          <button className="px-8 py-4 rounded-full text-lg font-semibold tracking-wide transition-all duration-300 hover:scale-105 cursor-pointer" style={{ background: "transparent", color: BRAND.textSecondary, border: `1px solid ${BRAND.border}` }}>
+            Watch Demo
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+          {STATS.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <p className="text-3xl font-bold" style={{ color: BRAND.textPrimary }}>{stat.value}</p>
+              <p className="text-sm mt-1" style={{ color: BRAND.textMuted }}>{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Features() {
+  return (
+    <section id="features" className="py-24 px-6" style={{ background: BRAND.bgDark }}>
+      <div className="max-w-6xl mx-auto">
+        <SectionHeading subtitle="Features" title="Everything You Need to Grow" description="From AI-generated content to deep analytics, PopFeed gives you a complete toolkit to dominate social media." />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {SERVICES.map((service) => {
+            const Icon = service.icon;
+            return (
+              <div
+                key={service.title}
+                className="rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1"
+                style={{ background: BRAND.bgCard, border: `1px solid ${BRAND.border}` }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = BRAND.bgCardHover; e.currentTarget.style.borderColor = BRAND.borderLight; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = BRAND.bgCard; e.currentTarget.style.borderColor = BRAND.border; }}
+              >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${BRAND.primary}20` }}>
+                  <Icon size={22} color={BRAND.primaryLight} />
+                </div>
+                <h3 className="text-lg font-semibold mb-3" style={{ color: BRAND.textPrimary }}>{service.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: BRAND.textSecondary }}>{service.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks() {
+  const steps = [
+    { number: "01", title: "Connect Your Accounts", description: "Link your Instagram, TikTok, Facebook, and other social accounts in just a few clicks." },
+    { number: "02", title: "Let AI Do the Work", description: "Our AI analyzes your brand, generates content ideas, and finds the perfect posting times." },
+    { number: "03", title: "Watch Your Audience Grow", description: "Sit back while PopFeed handles your social media. Check your dashboard to see the results." },
+  ];
+
+  return (
+    <section className="py-24 px-6" style={{ background: `linear-gradient(180deg, ${BRAND.bgDark}, ${BRAND.bgCard}, ${BRAND.bgDark})` }}>
+      <div className="max-w-5xl mx-auto">
+        <SectionHeading subtitle="How It Works" title="Up and Running in Minutes" description="No complicated setup. No learning curve. Just results." />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <div key={step.number} className="text-center relative">
+              <p className="text-6xl font-black mb-4 opacity-20" style={{ color: BRAND.primaryLight }}>{step.number}</p>
+              <h3 className="text-xl font-bold mb-3" style={{ color: BRAND.textPrimary }}>{step.title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: BRAND.textSecondary }}>{step.description}</p>
+              {index < steps.length - 1 && (
+                <div className="hidden md:block absolute top-8 -right-4">
+                  <IconChevronRight size={24} color={BRAND.textMuted} />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Pricing() {
+  return (
+    <section id="pricing" className="py-24 px-6" style={{ background: BRAND.bgDark }}>
+      <div className="max-w-6xl mx-auto">
+        <SectionHeading subtitle="Pricing" title="Simple, Transparent Pricing" description="Start free for 14 days. No credit card required. Upgrade when you're ready." />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {PRICING.map((tier) => (
+            <div
+              key={tier.name}
+              className="rounded-2xl p-8 flex flex-col transition-all duration-300 hover:-translate-y-1"
+              style={{ background: BRAND.bgCard, border: tier.popular ? `2px solid ${BRAND.accent}` : `1px solid ${BRAND.border}`, boxShadow: tier.popular ? `0 0 40px ${BRAND.accent}15` : "none" }}
+            >
+              {tier.popular && (
+                <div className="self-start px-3 py-1 rounded-full text-xs font-bold mb-4 uppercase tracking-wider" style={{ background: `${BRAND.accent}20`, color: BRAND.accent }}>Most Popular</div>
+              )}
+              <h3 className="text-xl font-bold mb-1" style={{ color: BRAND.textPrimary }}>{tier.name}</h3>
+              <p className="text-sm mb-6" style={{ color: BRAND.textSecondary }}>{tier.description}</p>
+              <div className="mb-6">
+                <span className="text-5xl font-extrabold" style={{ color: BRAND.textPrimary }}>${tier.price}</span>
+                <span className="text-sm ml-1" style={{ color: BRAND.textMuted }}>/ {tier.period}</span>
+              </div>
+              <ul className="flex-1 space-y-3 mb-8" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex-shrink-0"><IconCheck size={16} color={tier.popular ? BRAND.accent : BRAND.primaryLight} /></span>
+                    <span className="text-sm" style={{ color: BRAND.textSecondary }}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              {tier.popular ? (
+                <PrimaryButton>Get Started</PrimaryButton>
+              ) : (
+                <button className="w-full py-3 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 cursor-pointer" style={{ background: "transparent", color: BRAND.textPrimary, border: `1px solid ${BRAND.border}` }}>Get Started</button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQ() {
+  const [openIndex, setOpenIndex] = useState(null);
+  return (
+    <section id="faq" className="py-24 px-6" style={{ background: `linear-gradient(180deg, ${BRAND.bgDark}, ${BRAND.bgCard})` }}>
+      <div className="max-w-3xl mx-auto">
+        <SectionHeading subtitle="FAQ" title="Got Questions?" description="Here are the answers to the most common ones." />
+        <div className="space-y-3">
+          {FAQ_ITEMS.map((item, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div key={index} className="rounded-xl overflow-hidden transition-all duration-300" style={{ background: BRAND.bgCard, border: `1px solid ${isOpen ? BRAND.borderLight : BRAND.border}` }}>
+                <button onClick={() => setOpenIndex(isOpen ? null : index)} className="w-full flex items-center justify-between p-5 text-left cursor-pointer bg-transparent border-none">
+                  <span className="text-base font-medium pr-4" style={{ color: BRAND.textPrimary }}>{item.question}</span>
+                  <span className="flex-shrink-0">
+                    <IconChevronDown size={18} color={BRAND.textMuted} style={{ transition: "transform 0.3s", transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
+                  </span>
+                </button>
+                {isOpen && (
+                  <div className="px-5 pb-5">
+                    <p className="text-sm leading-relaxed" style={{ color: BRAND.textSecondary }}>{item.answer}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CallToAction() {
+  return (
+    <section className="py-24 px-6" style={{ background: BRAND.bgCard }}>
+      <div className="max-w-4xl mx-auto text-center rounded-3xl p-12 md:p-16 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${BRAND.primaryDark}, ${BRAND.primary}80)`, border: `1px solid ${BRAND.primary}40` }}>
+        <div className="absolute top-0 right-0 rounded-full opacity-30 blur-3xl pointer-events-none" style={{ width: 256, height: 256, background: BRAND.accent }} />
+        <div className="relative z-10">
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4" style={{ color: BRAND.textPrimary }}>Ready to Grow Your Audience?</h2>
+          <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: `${BRAND.textPrimary}BB` }}>
+            Join 10,000+ creators and businesses who trust PopFeed to handle their social media. Start your free 14-day trial today.
+          </p>
+          <PrimaryButton large>
+            <span className="flex items-center gap-2">Start Free Trial <IconArrowRight size={18} color={BRAND.textPrimary} /></span>
+          </PrimaryButton>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  const currentYear = new Date().getFullYear();
+  const footerLinks = [
+    { title: "Product", links: ["Features", "Pricing", "Integrations", "Changelog"] },
+    { title: "Company", links: ["About", "Blog", "Careers", "Contact"] },
+    { title: "Legal", links: ["Privacy", "Terms", "Cookie Policy"] },
+  ];
+
+  return (
+    <footer className="py-16 px-6" style={{ background: BRAND.bgDark, borderTop: `1px solid ${BRAND.border}` }}>
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <IconZap size={20} color={BRAND.accent} />
+              <span className="text-lg font-bold" style={{ color: BRAND.textPrimary }}>PopFeed</span>
+            </div>
+            <p className="text-sm" style={{ color: BRAND.textMuted }}>AI-powered social media management for creators and businesses.</p>
+          </div>
+          {footerLinks.map((group) => (
+            <div key={group.title}>
+              <h4 className="text-sm font-semibold mb-4" style={{ color: BRAND.textPrimary }}>{group.title}</h4>
+              <ul className="space-y-2" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {group.links.map((link) => (
+                  <li key={link}>
+                    <a href="#" className="text-sm no-underline transition-colors duration-200 hover:opacity-80" style={{ color: BRAND.textMuted }}>{link}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="pt-8 text-center text-sm" style={{ borderTop: `1px solid ${BRAND.border}`, color: BRAND.textMuted }}>
+          &copy; {currentYear} PopFeed. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+
+// ─── 6. MAIN APP ────────────────────────────────────────────
+
+export default function App() {
+  return (
+    <div style={{ background: BRAND.bgDark, minHeight: "100vh" }}>
+      <Navbar />
+      <Hero />
+      <Features />
+      <HowItWorks />
+      <Pricing />
+      <FAQ />
+      <CallToAction />
+      <Footer />
+    </div>
+  );
+}
