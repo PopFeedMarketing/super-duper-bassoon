@@ -43,7 +43,6 @@ const BRAND = {
 };
 
 /** LOGO — your PopFeed "Pf" logo as a base64 image. */
-const LOGO_SRC = logo
 // Each is a tiny inline SVG. "size" and "color" props control appearance.
 
 function IconZap({ size = 24, color = "currentColor" }) {
